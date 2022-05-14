@@ -1,5 +1,4 @@
 from typing import Callable, Coroutine
-
 import asyncio
 
 
@@ -34,4 +33,4 @@ def schedule(func: Callable[[...], Coroutine], snooze: int, *args, **kwargs):
             await func(*args, **kwargs)
             await asyncio.sleep(snooze)
 
-    asyncio.create_task(inner())
+    return asyncio.create_task(inner())
