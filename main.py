@@ -1,17 +1,12 @@
 import asyncio
-import json
+import logging
 import constants
+import utils.asyncio
+import jobs
 
 from pyrogram import Client
+from models import Channel, db
 from configurator import PyrogramConfig, load_config
-from models import Channel
-
-
-def load_channel() -> Channel:
-    try:
-        file = open("old_channel_data.dat")
-    except FileNotFoundError:
-        pass
 
 
 async def client_builder(config: PyrogramConfig) -> Client:
@@ -33,18 +28,32 @@ async def client_builder(config: PyrogramConfig) -> Client:
     return client
 
 
+def init_db():
+    """
+    Initializes database
+    :return:
+    """
+    db.create_tables(
+        [
+            Channel,
+        ]
+    )
+
+
 async def main():
     """Heart of project"""
-    config = load_config(constants.CONFIG_FILENAME)
-    print(config.channels.original_channel_id)
-    client = await client_builder(config.pyrogram)
-    ch = await client.get_chat(chat_id=-1001469529464)
 
-    print(ch.id)
-    print(ch.description)
-    print(ch.username)
-    print(ch.title)
+    init_db()
+    config = load_config(constants.CONFIG_FILENAME)
+    client = await client_builder(config.pyrogram)
+
+    tasks = [
+        utils.asyncio.schedule(jobs.handle_updates, 10, client, config.channels)
+    ]
+
+    await asyncio.wait(tasks)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
