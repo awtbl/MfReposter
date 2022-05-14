@@ -2,7 +2,7 @@ from typing import Callable, Coroutine
 import asyncio
 
 
-def call_after(func: Callable[[...], Coroutine], delay: int, *args, **kwargs):
+def call_after(func: Callable[[...], Coroutine], delay: int, *args, **kwargs) -> asyncio.Task:
     """
     Calls async function after ```delay``` seconds
     :param func: An async function
@@ -15,7 +15,7 @@ def call_after(func: Callable[[...], Coroutine], delay: int, *args, **kwargs):
         await asyncio.sleep(delay)
         await func(*args, **kwargs)
 
-    asyncio.create_task(inner_func())
+    return asyncio.create_task(inner_func())
 
 
 def schedule(func: Callable[[...], Coroutine], snooze: int, *args, **kwargs) -> asyncio.Task:
