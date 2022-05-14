@@ -35,8 +35,8 @@ duplicate = ; provide ID or USERNAME of Channel which will be mirror
 
 ```
 
-Copy & paste example to your config.ini and fill each field
-You can get API_ID and API_HASH from <a href='https://my.telegram.org'>here</a>!
+Copy & paste example to your config.ini and fill each field <br>
+You can get <b>API_ID</b> and <b>API_HASH</b> from <a href='https://my.telegram.org'>here</a>!
 
 ## Run
 ```
