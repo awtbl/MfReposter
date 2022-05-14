@@ -48,7 +48,7 @@ async def main():
     client = await client_builder(config.pyrogram)
 
     tasks = [
-        utils.asyncio.schedule(jobs.handle_updates, 10, client, config.channels)
+        utils.asyncio.schedule(jobs.handle_updates, config.scheduler.update_interval, client, config.channels)
     ]
 
     await asyncio.wait(tasks)
