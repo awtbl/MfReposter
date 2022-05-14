@@ -22,7 +22,7 @@ vim config.ini
 ```
 ### Example config
 <img src='.github/config.png'> <br>
-```
+```ini
 [scheduler]
 ; one check per minute
 update_interval = 60 ; You can configure interval
