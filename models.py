@@ -1,4 +1,6 @@
-from peewee import Model, IntegerField
+from peewee import Model, IntegerField, SqliteDatabase
+
+db = SqliteDatabase('data.db')
 
 
 class Channel(Model):
@@ -8,5 +10,12 @@ class Channel(Model):
         Channel's last post ID
     """
 
-    channel_id = IntegerField(unique=True)
+    channel_id = IntegerField()
     last_post_id = IntegerField()
+
+    class Meta:
+        database = db
+
+        indexes = (
+            (("channel_id",), False),
+        )
