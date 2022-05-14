@@ -18,10 +18,17 @@ class PyrogramConfig:
 
 
 @dataclass
+class SchedulerConfig:
+    """Configuration-class for Scheduler"""
+    update_interval: int
+
+
+@dataclass
 class Configuration:
     """Main Config-class"""
     pyrogram: PyrogramConfig
     channels: ChannelsConfig
+    scheduler: SchedulerConfig
 
 
 def parse_telegram_id(config: ConfigParser, section: str, option: str) -> Union[str, int]:
@@ -59,7 +66,12 @@ def load_config(filename: str) -> Configuration:
         parse_telegram_id(config, "channels", "duplicate"),
     )
 
+    scheduler_config = SchedulerConfig(
+        config.getint("scheduler", "update_interval")
+    )
+
     return Configuration(
         pyrogram_config,
         channels_config,
+        scheduler_config
     )
