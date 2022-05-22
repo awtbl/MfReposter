@@ -21,7 +21,6 @@ touch config.ini
 vim config.ini
 ```
 ### Example config
-<img src='.github/config.png'> <br>
 ```
 [scheduler]
 ; one check per minute
