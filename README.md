@@ -21,7 +21,7 @@ touch config.ini
 vim config.ini
 ```
 ### Example config
-```
+```ini
 [scheduler]
 ; one check per minute
 update_interval = 60 ; You can configure interval
