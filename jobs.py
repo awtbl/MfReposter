@@ -1,8 +1,9 @@
+from re import L
 from pyrogram import Client
-from pyrogram.types import Chat
-
+from pyrogram.errors import FloodWait
 from configurator import ChannelsConfig
 from models import Channel
+from asyncio import sleep 
 
 import logging
 import loader
@@ -86,7 +87,18 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
 
         logging.info(f"Forwarding message {message.id}")
 
-        try:
-            await message.forward(channels_config.duplicate_channel_id)
-        except Exception as e:
-            logging.info(f"Can't forward message {message.id}, type is {type(message)}, exc {e}")
+        sleep_time = 10
+
+        while True:
+            try:
+                await message.forward(channels_config.duplicate_channel_id)
+            except FloodWait:
+                logging.info("Floodwait, waiting 10 seconds...")
+                await sleep(sleep_time)
+                sleep_time += 10
+                continue
+            except Exception as e:
+                logging.log(f"Exceptino '{e}' occured during forwarding message {message.id}")
+                break
+            
+            break
