@@ -1,9 +1,9 @@
-from re import L
 from pyrogram import Client
 from pyrogram.errors import FloodWait
 from configurator import ChannelsConfig
 from models import Channel
 from asyncio import sleep 
+from pyrogram.types import Chat
 
 import logging
 import loader
