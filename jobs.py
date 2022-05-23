@@ -93,7 +93,7 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
             try:
                 await message.forward(channels_config.duplicate_channel_id)
             except FloodWait:
-                logging.info("Floodwait, waiting 10 seconds...")
+                logging.info(f"Floodwait, waiting {sleep_time} seconds...")
                 await sleep(sleep_time)
                 sleep_time += 10
                 continue
