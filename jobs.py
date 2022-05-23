@@ -94,7 +94,7 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
                 sleep_time += 10
                 continue
             except Exception as e:
-                logging.log(f"Exceptino '{e}' occured during forwarding message {message.id}")
+                logging.info(f"Exceptino '{e}' occured during forwarding message {message.id}")
                 break
             
             break
