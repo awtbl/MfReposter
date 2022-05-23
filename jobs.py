@@ -73,10 +73,6 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
     if not news:
         return
 
-    channel.last_post_id = news[-1].id
-    channel.delete_instance()
-    channel.save()
-
     for message in news:
         if message.new_chat_photo:
             logging.info("New chat photo detected, updating...")
@@ -91,7 +87,8 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
 
         while True:
             try:
-                await message.forward(channels_config.duplicate_channel_id)
+                await client.send_message
+                await message.forward(enti)
             except FloodWait:
                 logging.info(f"Floodwait, waiting {sleep_time} seconds...")
                 await sleep(sleep_time)
@@ -102,3 +99,7 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
                 break
             
             break
+        
+    channel.last_post_id = news[-1].id
+    channel.delete_instance()
+    channel.save()
