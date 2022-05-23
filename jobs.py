@@ -80,24 +80,24 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
         elif message.new_chat_title:
             logging.info("New chat title detected, updating...")
             await duplicate_channel.set_title(message.new_chat_title)
+        else:
+            logging.info(f"Forwarding message {message.id}")
 
-        logging.info(f"Forwarding message {message.id}")
+            sleep_time = 10
 
-        sleep_time = 10
-
-        while True:
-            try:
-                await message.forward(channels_config.duplicate_channel_id)
-            except FloodWait:
-                logging.info(f"Floodwait, waiting {sleep_time} seconds...")
-                await sleep(sleep_time)
-                sleep_time += 10
-                continue
-            except Exception as e:
-                logging.info(f"Exceptino '{e}' occured during forwarding message {message.id}")
+            while True:
+                try:
+                    await message.forward(channels_config.duplicate_channel_id)
+                except FloodWait:
+                    logging.info(f"Floodwait, waiting {sleep_time} seconds...")
+                    await sleep(sleep_time)
+                    sleep_time += 10
+                    continue
+                except Exception as e:
+                    logging.info(f"Exceptino '{e}' occured during forwarding message {message.id}")
+                    break
+                
                 break
-            
-            break
         
     channel.last_post_id = news[-1].id
     channel.delete_instance()
