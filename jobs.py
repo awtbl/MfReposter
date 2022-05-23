@@ -87,8 +87,7 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
 
         while True:
             try:
-                await client.send_message
-                await message.forward(enti)
+                await message.forward(channels_config.original_channel_id)
             except FloodWait:
                 logging.info(f"Floodwait, waiting {sleep_time} seconds...")
                 await sleep(sleep_time)
