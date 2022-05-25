@@ -2,7 +2,7 @@ from pyrogram import Client
 from pyrogram.errors import FloodWait
 from configurator import ChannelsConfig
 from models import Channel
-from asyncio import sleep 
+from asyncio import sleep
 from pyrogram.types import Chat
 
 import logging
@@ -76,29 +76,32 @@ async def forward_messages(client: Client, original_channel_id: Chat, channels_c
     for message in news:
         if message.new_chat_photo:
             logging.info("New chat photo detected, updating...")
-            await duplicate_channel.set_photo(message.new_chat_photo.file_id)
+            await duplicate_channel.set_photo(message.new_chat_photo.file_unique_id)
         elif message.new_chat_title:
             logging.info("New chat title detected, updating...")
             await duplicate_channel.set_title(message.new_chat_title)
         else:
             logging.info(f"Forwarding message {message.id}")
 
-            sleep_time = 10
+            sleep_time = 400  # 400 seconds
 
             while True:
                 try:
                     await message.forward(channels_config.duplicate_channel_id)
                 except FloodWait:
                     logging.info(f"Floodwait, waiting {sleep_time} seconds...")
+                    channel.delete_instance()
+                    channel.last_post_id = message.id
+                    channel.save()
                     await sleep(sleep_time)
                     sleep_time += 10
                     continue
                 except Exception as e:
                     logging.info(f"Exceptino '{e}' occured during forwarding message {message.id}")
                     break
-                
+
                 break
-        
+
     channel.last_post_id = news[-1].id
     channel.delete_instance()
     channel.save()
