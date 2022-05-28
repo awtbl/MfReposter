@@ -32,6 +32,7 @@ def build_session_factory(engine: AsyncEngine) -> Callable[[], Awaitable[AsyncSe
     :param engine: Initialized SQLModel's engine
     :return: An AsyncSession factory
     """
+
     async def factory() -> AsyncSession:
         se = sessionmaker(
             engine,
@@ -62,22 +63,9 @@ async def client_builder(config: PyrogramConfig) -> Client:
     return client
 
 
-def init_db():
-    """
-    Initializes database
-    :return:
-    """
-    db.create_tables(
-        [
-            Channel,
-        ]
-    )
-
-
 async def main():
     """Heart of project"""
 
-    init_db()
     config = load_config(constants.CONFIG_FILENAME)
     client = await client_builder(config.pyrogram)
 
