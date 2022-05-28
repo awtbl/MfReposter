@@ -1,12 +1,28 @@
 import asyncio
 import logging
+
+from sqlmodel import SQLModel
+
 import constants
 import utils.asyncio
 import jobs
 
 from pyrogram import Client
-from models import Channel, db
-from configurator import PyrogramConfig, load_config
+from models import Channel
+from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
+from sqlalchemy.orm import sessionmaker
+from configurator import PyrogramConfig, DatabaseConfig, load_config
+
+
+async def engine_factory(config: DatabaseConfig) -> AsyncEngine:
+    """
+    A factory for creating asynchronous SQLAlchemy's engines
+    :param config: A database's configuration
+    :return: Initialized engine
+    """
+    connection = create_async_engine(config.database_url)
+    await connection.run_sync(SQLModel.metadata.create_all)
+    return connection
 
 
 async def client_builder(config: PyrogramConfig) -> Client:
