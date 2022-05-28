@@ -12,6 +12,7 @@ from models import Channel
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from configurator import PyrogramConfig, DatabaseConfig, load_config
+from typing import Callable, Awaitable
 
 
 async def engine_factory(config: DatabaseConfig) -> AsyncEngine:
@@ -23,6 +24,23 @@ async def engine_factory(config: DatabaseConfig) -> AsyncEngine:
     connection = create_async_engine(config.database_url)
     await connection.run_sync(SQLModel.metadata.create_all)
     return connection
+
+
+def build_session_factory(engine: AsyncEngine) -> Callable[[], Awaitable[AsyncSession]]:
+    """
+    Returns an AsyncSession factory
+    :param engine: Initialized SQLModel's engine
+    :return: An AsyncSession factory
+    """
+    async def factory() -> AsyncSession:
+        se = sessionmaker(
+            engine,
+            class_=AsyncSession,
+            expire_on_commit=True,
+        )
+        return await se()
+
+    return factory
 
 
 async def client_builder(config: PyrogramConfig) -> Client:
