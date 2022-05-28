@@ -9,24 +9,24 @@ import logging
 import loader
 
 
-async def forward_messages(client: Client, original_channel_id: Chat, channels_config: ChannelsConfig):
+async def forward_messages(client: Client, channels_config: ChannelsConfig):
     """
     Will forward NEW messages.
     :param client: A pyrogram client
-    :param original_channel_id: An original channel's ID
     :param channels_config: A channels-configuration
     :return: None
     """
 
     logging.log(logging.INFO, "Retrieving channel's metadata")
+    original_channel = await client.get_chat(channels_config.original_channel_id)
 
     channel = Channel.get_or_none(
-        Channel.channel_id == original_channel_id.id
+        Channel.channel_id == original_channel.id
     )
 
     if not channel:
         channel = Channel(
-            channel_id=original_channel_id.id,
+            channel_id=original_channel.id,
             last_post_id=0,
         )
 
