@@ -1,12 +1,13 @@
-from sqlmodel import SQLModel, Field
+from tortoise.models import Model
+from tortoise.models import IntField
 
 
-class Channel(SQLModel):
+class Channel(Model):
     """
     The class for containing channel's metadata like
         Channel's ID,
         Channel's last post ID
     """
 
-    channel_id: int
-    last_post_id: int = Field(default=0)
+    channel_id: int = IntField()
+    last_post_id: int = IntField(default=0)
