@@ -18,6 +18,12 @@ class PyrogramConfig:
 
 
 @dataclass
+class DatabaseConfig:
+    """Configuration-class for database (used for SQLModel)"""
+    database_url: str
+
+
+@dataclass
 class SchedulerConfig:
     """Configuration-class for Scheduler"""
     update_interval: int
@@ -27,6 +33,7 @@ class SchedulerConfig:
 class Configuration:
     """Main Config-class"""
     pyrogram: PyrogramConfig
+    database: DatabaseConfig
     channels: ChannelsConfig
     scheduler: SchedulerConfig
 
@@ -61,6 +68,10 @@ def load_config(filename: str) -> Configuration:
         config.get("pyrogram", "api_hash"),
     )
 
+    database_config = DatabaseConfig(
+        config.get("db", "url")
+    )
+
     channels_config = ChannelsConfig(
         parse_telegram_id(config, "channels", "original"),
         parse_telegram_id(config, "channels", "duplicate"),
@@ -72,6 +83,7 @@ def load_config(filename: str) -> Configuration:
 
     return Configuration(
         pyrogram_config,
+        database_config,
         channels_config,
         scheduler_config
     )

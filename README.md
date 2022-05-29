@@ -10,7 +10,13 @@
 
 ### How to run?
 
-#### Firstly, install dependencies!
+#### Clone repo
+
+```shell
+git clone https://github.com/awtbl/MfReposter.git
+```
+
+#### Install dependencies
 ```shell
 cd MfReposter/
 pip install -r requirements.txt
@@ -25,6 +31,8 @@ vim config.ini
 [scheduler]
 ; one check per minute
 update_interval = 60 ; You can configure interval
+[db]
+url = sqlite://database.db ; Here I using SQLite as db, you can use for example MySQL
 [pyrogram]
 api_id = ; API_ID, obtain it from my.telegram.org
 api_hash = ; api_hash, obtain it from my.telegram.org
