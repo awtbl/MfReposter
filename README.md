@@ -25,6 +25,8 @@ vim config.ini
 [scheduler]
 ; one check per minute
 update_interval = 60 ; You can configure interval
+[db]
+url = sqlite://database.db ; Here I using SQLite as db, you can use for example MySQL
 [pyrogram]
 api_id = ; API_ID, obtain it from my.telegram.org
 api_hash = ; api_hash, obtain it from my.telegram.org
