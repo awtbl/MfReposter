@@ -52,6 +52,7 @@ async def forward_messages(client: Client, channels_config: ChannelsConfig):
                     await message.forward(channels_config.duplicate_channel_id)
                 except FloodWait:
                     logging.info(f"Floodwait, waiting {sleep_time} seconds...")
+                    logging.info(f"Saving last post's ID ({message.id})")
                     channel.last_post_id = message.id
                     await channel.save()
                     await sleep(sleep_time)
