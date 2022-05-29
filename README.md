@@ -10,7 +10,13 @@
 
 ### How to run?
 
-#### Firstly, install dependencies!
+#### Clone repo
+
+```shell
+git clone https://github.com/awtbl/MfReposter.git
+```
+
+#### Install dependencies
 ```shell
 cd MfReposter/
 pip install -r requirements.txt
