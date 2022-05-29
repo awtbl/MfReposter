@@ -1,5 +1,4 @@
-from tortoise.models import Model
-from tortoise.models import IntField
+from tortoise.models import Model, IntField
 
 
 class Channel(Model):
