@@ -50,23 +50,16 @@ async def main():
     """Heart of project"""
 
     config = load_config(constants.CONFIG_FILENAME)
-    # client = await client_builder(config.pyrogram)
+    client = await client_builder(config.pyrogram)
 
     await initialize_database(config.database)
 
-    ch = await Channel.get_or_create(
-        identifier=1,
-        defaults={
-            "last_post_id": 0,
-        }
-    )
-
     tasks = [
-        utils.asyncio.schedule(jobs.handle_updates, config.scheduler.update_interval, client, config.channels)
+        utils.asyncio.schedule(jobs.update_channel_info, config.scheduler.update_interval, client, config.channels),
+        utils.asyncio.schedule(jobs.forward_messages, config.scheduler.update_interval, client, config.channels)
     ]
 
-    # await asyncio.wait(tasks)
-    print("OK")
+    await asyncio.wait(tasks)
 
 
 if __name__ == "__main__":
