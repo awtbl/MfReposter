@@ -8,5 +8,5 @@ class Channel(Model):
         Channel's last post ID
     """
 
-    channel_id: int = IntField()
-    last_post_id: int = IntField(default=0)
+    identifier = IntField()
+    last_post_id = IntField(default=0)
