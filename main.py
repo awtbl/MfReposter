@@ -1,47 +1,30 @@
 import asyncio
 import logging
 
-from sqlmodel import SQLModel
-
 import constants
+from models.channel import Channel
 import utils.asyncio
 import jobs
 
 from pyrogram import Client
-from models import Channel
-from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
-from sqlalchemy.orm import sessionmaker
 from configurator import PyrogramConfig, DatabaseConfig, load_config
-from typing import Callable, Awaitable
+from tortoise import Tortoise
 
 
-async def engine_factory(config: DatabaseConfig) -> AsyncEngine:
+async def initialize_database(config: DatabaseConfig):
     """
-    A factory for creating asynchronous SQLAlchemy's engines
-    :param config: A database's configuration
-    :return: Initialized engine
+    Initializes database
     """
-    connection = create_async_engine(config.database_url)
-    await connection.run_sync(SQLModel.metadata.create_all)
-    return connection
+    await Tortoise.init(
+        db_url=config.database_url,
+        modules={
+            "models": [
+                "models"
+            ],
+        }
+    )
 
-
-def build_session_factory(engine: AsyncEngine) -> Callable[[], Awaitable[AsyncSession]]:
-    """
-    Returns an AsyncSession factory
-    :param engine: Initialized SQLModel's engine
-    :return: An AsyncSession factory
-    """
-
-    async def factory() -> AsyncSession:
-        se = sessionmaker(
-            engine,
-            class_=AsyncSession,
-            expire_on_commit=True,
-        )
-        return await se()
-
-    return factory
+    await Tortoise.generate_schemas()
 
 
 async def client_builder(config: PyrogramConfig) -> Client:
@@ -67,13 +50,23 @@ async def main():
     """Heart of project"""
 
     config = load_config(constants.CONFIG_FILENAME)
-    client = await client_builder(config.pyrogram)
+    # client = await client_builder(config.pyrogram)
+
+    await initialize_database(config.database)
+
+    ch = await Channel.get_or_create(
+        identifier=1,
+        defaults={
+            "last_post_id": 0,
+        }
+    )
 
     tasks = [
         utils.asyncio.schedule(jobs.handle_updates, config.scheduler.update_interval, client, config.channels)
     ]
 
-    await asyncio.wait(tasks)
+    # await asyncio.wait(tasks)
+    print("OK")
 
 
 if __name__ == "__main__":
