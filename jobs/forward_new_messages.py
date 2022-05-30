@@ -59,10 +59,11 @@ async def forward_messages(client: Client, channels_config: ChannelsConfig):
                     sleep_time += 10
                     continue
                 except Exception as e:
-                    logging.info(f"Exceptino '{e}' occured during forwarding message {message.id}")
+                    logging.info(f"Exception'{e}' occur during forwarding message {message.id}")
                     break
 
                 break
 
     channel.last_post_id = news[-1].id
+    logging.info(f"Forwarding finished, totally {len(news)} messages forwarded")
     await channel.save()
